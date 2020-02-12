@@ -4,7 +4,11 @@ import { SearchBar } from '../SearchBar/SearchBar';
 import { SearchResults } from '../SearchResults/SearchResults';
 import { Playlist } from '../Playlist/Playlist';
 
-export class App extends React.Component {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state.searchResults = {};
+  }
   render() {
     return (
       <div>
@@ -12,7 +16,7 @@ export class App extends React.Component {
         <div className="App">
           <SearchBar />
           <div className="App-playlist">
-            <SearchResults />
+            <SearchResults searchResults={this.state.searchResults} />
             <Playlist />
           </div>
         </div>
