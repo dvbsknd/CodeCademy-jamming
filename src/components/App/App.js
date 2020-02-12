@@ -12,6 +12,7 @@ class App extends React.Component {
     this.state.playlistName = '';
     this.state.playlistTracks = [];
     this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
   }
   addTrack(track) {
     const present = this.state.playlistTracks.find(savedTrack => {
@@ -21,6 +22,12 @@ class App extends React.Component {
       const freshTracks = this.playlistTracks.push(track);
       this.setState({ playlistTracks: freshTracks });
     }
+  }
+  removeTrack(track) {
+    const freshTracks = this.state.playlistTracks.filter(existingTrack => {
+      return existingTrack.id !== track.id
+    });
+    this.setState({ playListTracks: freshTracks });
   }
   render() {
     return (
@@ -36,6 +43,7 @@ class App extends React.Component {
             <Playlist 
               playListName={this.state.playListName} 
               playlistTracks={this.state.playlistTracks} 
+              onRemove={this.removeTrack}
             />
           </div>
         </div>
