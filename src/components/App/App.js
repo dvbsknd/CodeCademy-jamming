@@ -7,7 +7,7 @@ import { Playlist } from '../Playlist/Playlist';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state.searchResults = {};
+    this.state.searchResults = [];
   }
   render() {
     return (
