@@ -1,5 +1,5 @@
-const spotifyUrl = 'https://api.spotify.com/v3/businesses/search'
-const apiKey = 'nXs_47W99NiOCtbu4OKZ4TiYnNE0tgfrYooEF6lGOG5gAQQI3zuSsF3XRND_guB6dO7YbzAUGeq_AjS1JADhukBbv2mbSMAe2jZ9yXENtH40kndsMuFz1zUc2DBCXnYx';
+const spotifyUrl = ''
+const apiKey = '';
 const corsUrl = 'https://cors-anywhere.herokuapp.com/' + spotifyUrl;
 const headers = { Authorization: `Bearer ${apiKey}` }
 const options = { headers: headers }
