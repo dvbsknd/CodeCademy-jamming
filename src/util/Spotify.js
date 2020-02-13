@@ -1,8 +1,9 @@
 const spotifyUrl = 'https://accounts.spotify.com/authorize/';
 const clientId = 'a460d484414e43408a5271308c3eb89c'; 
 const redirectUri = 'http://localhost:3000/'; 
+const searchUri = 'https://api.spotify.com/v1/search';
 
-const accessToken = {};
+let accessToken = {};
 
 const Spotify = {};
 
@@ -20,12 +21,12 @@ Spotify.getAccessToken = () => {
     }
   }
   return accessToken;
-}
-Spotify.getAccessToken.options = {
-  client_id: clientId,
-  response_type: 'token',
-  redirect_uri: encodeURI(redirectUri)
-}
+};
+Spotify.getAccessToken.options = [
+  { client_id: clientId },
+  { response_type: 'token' },
+  { redirect_uri: encodeURI(redirectUri) }
+];
 Spotify.objectifyQueryString = (url) => {
   const paramsString = url.split('#')[1];
   const paramsObject = {};
@@ -35,7 +36,7 @@ Spotify.objectifyQueryString = (url) => {
     });
   };
   return paramsObject;
-}
+};
 Spotify.queryStringify = (params) => {
   return params.reduce((string, param, i) => {
     const paramName = Object.keys(param);
@@ -44,35 +45,21 @@ Spotify.queryStringify = (params) => {
     string += `${delimiter}${paramName}=${paramValue}`;
     return string;
   }, '');
-}
-
-Spotify.search = (term, location, sortBy) => {
+};
+Spotify.search = (term) => {
   const queryParams = [
-    { term: term },
-    { location: location },
-    { sort_by: sortBy }
-  ]
-  const queryUrl = corsUrl + Spotify.queryStringify(queryParams);
-  return fetch(queryUrl, options)
+    { q: encodeURI(term) },
+    { type: 'track' }
+  ];
+  const queryUrl = searchUri + Spotify.queryStringify(queryParams);
+  return fetch(queryUrl, 
+    { headers: {
+      'Authorization': `Bearer ${Spotify.getAccessToken().token}`
+    }} 
+  )
     .then(response => response.json())
     .then(jsonResponse => {
-      if (jsonResponse.businesses) {
-        return jsonResponse.businesses.map(business => {
-          return {
-            id: business.id,
-            imageSrc: business.image_url,
-            name: business.name, 
-            address: business.location.address1,
-            city: business.location.city,
-            state: business.location.state,
-            zipCode: business.location.zip_code,
-            category: business.categories[0].title,
-            rating: business.rating,
-            reviewCount: business.review_count 
-          }
-        });
-      } else {
-      }
+      return jsonResponse;
     });
 };
 
