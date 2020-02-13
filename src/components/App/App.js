@@ -11,7 +11,7 @@ class App extends React.Component {
     this.state = {};
     this.state.searchResults = [];
     this.state.playlistName = 'New Playlist';
-    this.state.playlistTracks = [{ id: 1, name: 'Test', artist: 'Britnay', album: 'Oops, MF', uri: 'spotify://track1029u32/'}];
+    this.state.playlistTracks = [];
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
@@ -38,12 +38,13 @@ class App extends React.Component {
     console.log('Track removed from playlist.');
   }
   updatePlaylistName(newName) {
+    console.log('Playlist name updated:', newName);
     this.setState({playlistName: newName});
   }
   savePlaylist() {
-    // const tracksToSave = this.state.playlistTracks.map(track => track.uri);
-    // const playlistName = this.state.playlistName;
-    // Spotify.storePlayList(tracksTosave, playlistName, this.clearPlaylist);
+    const tracksToSave = this.state.playlistTracks.map(track => track.uri);
+    const playlistName = this.state.playlistName;
+    Spotify.storePlaylist(playlistName, tracksToSave);
   }
   clearPlaylist() {
     this.setState({
@@ -54,19 +55,20 @@ class App extends React.Component {
   search(term) {
     Spotify.search(term)
       .then(result => {
-        console.log('Search completed, returned results:', result.tracks.items.length);
-        const tracks = result.tracks.items.map(trackdata => { 
-          return {
-            id: trackdata.id,
-            name: trackdata.name,
-            artist: trackdata.artists[0].name, 
-            album: trackdata.album.name,
-            uri: trackdata.uri
-          }
-        }
-        );
-        this.setState({ searchResults: tracks });
-    });
+        if (result.tracks) {
+          console.log('Search completed, returned results:', result.tracks.items.length);
+          const tracks = result.tracks.items.map(trackdata => { 
+            return {
+              id: trackdata.id,
+              name: trackdata.name,
+              artist: trackdata.artists[0].name, 
+              album: trackdata.album.name,
+              uri: trackdata.uri
+            }
+          });
+          this.setState({ searchResults: tracks });
+        } else { console.log('Error:', result) }
+      });
   }
   render() {
     return (
