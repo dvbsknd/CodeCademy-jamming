@@ -68,13 +68,14 @@ Spotify.search = (term) => {
     return Promise.resolve('Search term not supplied.');
   }
 };
-Spotify.storePlaylist = (playlistName, tracksToSave) => {
-  if (tracksToSave.length > 0 && Spotify.getAccessToken().token) {
+Spotify.storePlaylist = (playlistName, tracksToSave, callBack) => {
+  if (playlistName && tracksToSave.length > 0 && Spotify.getAccessToken().token) {
   Spotify.getUserId()
     .then(userId => {
       Spotify.getPlaylistId(userId, playlistName)
         .then(playlistId => {
           Spotify.storePlaylistTracks(playlistId, tracksToSave)
+            .then(() => callBack())
         })
     });
   } else { console.log('No playlist data or invalid token.') }
