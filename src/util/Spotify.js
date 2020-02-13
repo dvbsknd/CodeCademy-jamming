@@ -1,11 +1,41 @@
-const spotifyUrl = ''
-const apiKey = '';
-const corsUrl = 'https://cors-anywhere.herokuapp.com/' + spotifyUrl;
-const headers = { Authorization: `Bearer ${apiKey}` }
-const options = { headers: headers }
+const spotifyUrl = 'https://accounts.spotify.com/authorize/';
+const clientId = 'a460d484414e43408a5271308c3eb89c'; 
+const redirectUri = 'http://localhost:3000/'; 
+
+const accessToken = {};
 
 const Spotify = {};
 
+Spotify.getAccessToken = () => {
+  if (!accessToken.token) {
+    const params = Spotify.objectifyQueryString(window.location.href);
+    if (!params.access_token) {
+      const requestUri = spotifyUrl + Spotify.queryStringify(Spotify.getAccessToken.options);
+      window.location.replace(requestUri);
+    } else {
+      accessToken.token = params.access_token;
+      accessToken.expiry = params.expires_in;
+      window.setTimeout(() => accessToken = {}, accessToken.expiry * 1000);
+      window.history.pushState('Access Token', null, '/');
+    }
+  }
+  return accessToken;
+}
+Spotify.getAccessToken.options = {
+  client_id: clientId,
+  response_type: 'token',
+  redirect_uri: encodeURI(redirectUri)
+}
+Spotify.objectifyQueryString = (url) => {
+  const paramsString = url.split('#')[1];
+  const paramsObject = {};
+  if (paramsString) {
+    paramsString.split('&').forEach(pair => {
+      paramsObject[pair.split('=')[0]] = [pair.split('=')[1]]; 
+    });
+  };
+  return paramsObject;
+}
 Spotify.queryStringify = (params) => {
   return params.reduce((string, param, i) => {
     const paramName = Object.keys(param);
