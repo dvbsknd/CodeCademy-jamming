@@ -24,8 +24,10 @@ class App extends React.Component {
       return savedTrack.id === track.id
     });
     if (!present) {
-      const freshTracks = this.playlistTracks.push(track);
+      const freshTracks = this.state.playlistTracks;
+      freshTracks.push(track);
       this.setState({ playlistTracks: freshTracks });
+      console.log('Track added to playlist:', track.name);
     }
   }
   removeTrack(track) {
@@ -51,8 +53,7 @@ class App extends React.Component {
   search(term) {
     Spotify.search(term)
       .then(result => {
-        console.log(result.tracks.items);
-        console.log(Array.isArray(result.tracks.items));
+        console.log('Search completed, returned results:', result.tracks.items.length);
         const tracks = result.tracks.items.map(trackdata => { 
           return {
             id: trackdata.id,
