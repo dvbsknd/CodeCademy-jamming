@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Please note that although there's an API key stored in `/util/Spotify.js` it's been invalidated on the Spotify side. At the time of writing I still wasn't aware of the (obvious) risk of pushing this to a public repository!
 
 ## Available Scripts
 
